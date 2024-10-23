@@ -10,17 +10,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         ConfigModule.forRoot({
             load: [...configs],
             isGlobal: true,
-            envFilePath: './.env',
         }),
         LoggerModule.forRoot(),
         TypeOrmModule.forRootAsync({
             inject: [ConfigService],
             useFactory: async (configService: ConfigService) => {
-                const pgConfig = configService.get('pg');
-                return {
-                    type: 'postgres',
-                    ...pgConfig,
-                };
+                return configService.get('typeorm');
             },
         }),
     ],

@@ -15,12 +15,12 @@ erDiagram
          UUID id PK
          TEXT market_hash_name
          VARCHAR(5) currency
-         REAL suggested_price
+         NUMERIC suggested_price
          TEXT item_page
          TEXT market_page
-         REAL min_price
-         REAL max_price
-         REAL  mean_price
+         NUMERIC min_price
+         NUMERIC max_price
+         NUMERIC  mean_price
          INTEGER quantity
          TIMESTAMP created_at
          TIMESTAMP updated_at
@@ -28,7 +28,7 @@ erDiagram
 
     PURCHASE {
          UUID id PK
-         REAL price
+         NUMERIC price
          UUID user FK
          UUID item FK
          TIMESTAMP created_at

@@ -20,7 +20,12 @@
     "prepare": "husky",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "doc": "typedoc --entryPointStrategy expand ./src/* --out ./autodocs",
-    "autocommit": "git add . && git commit -m \"autocommit: update docs and format\""
+    "autocommit": "git add . && git commit -m \"autocommit: update docs and format\"",
+    "typeorm": "ts-node ./node_modules/typeorm/cli",
+    "migration:run": "npm run typeorm migration:run -- -d ./src/config",
+    "migration:generate": "npm run typeorm -- -d ./src/config migration:generate ./src/migrations/$npm_config_name",
+    "migration:create": "npm run typeorm -- migration:create ./src/migrations",
+    "migration:revert": "npm run typeorm -- -d ./src/config migration:revert"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
@@ -29,6 +34,7 @@
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/swagger": "^7.4.2",
     "@nestjs/typeorm": "^10.0.2",
+    "dotenv": "^16.4.5",
     "nestjs-pino": "^4.1.0",
     "pg": "^8.13.0",
     "reflect-metadata": "^0.2.0",
