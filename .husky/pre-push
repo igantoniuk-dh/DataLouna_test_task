@@ -1,0 +1,5 @@
+npm run test:e2e
+npm run lint
+npm run format
+npm run doc
+npm run autocommit
