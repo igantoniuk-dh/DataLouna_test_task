@@ -5,6 +5,6 @@ import { DataSource } from 'typeorm';
 export class AppService {
     constructor() {}
     async getHello(): Promise<string> {
-        return 'hello';
+        return 'Hello World!';
     }
 }
