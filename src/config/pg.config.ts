@@ -6,7 +6,7 @@ export const pgConfig = registerAs('pg', () => {
         const pgConfigSchema = z.object({
             host: z.string(),
             port: z.number(),
-            user: z.string(),
+            username: z.string(),
             password: z.string(),
             database: z.string(),
             ssl: z.string().optional(),
@@ -16,7 +16,7 @@ export const pgConfig = registerAs('pg', () => {
             ssl: process.env.TLS_CA_PATH,
             host: process.env.PG_HOST,
             port: parseInt(process.env.PG_PORT || ''),
-            user: process.env.PG_USER,
+            username: process.env.PG_USER,
             password: process.env.PG_PASSWORD,
             database: process.env.PG_DATABASE,
         }) as z.infer<typeof pgConfigSchema>;
