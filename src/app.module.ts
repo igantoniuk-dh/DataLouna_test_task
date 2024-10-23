@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { LoggerModule } from 'nestjs-pino';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ConfigModule, ConfigService } from '@nestjs/config';
 import configs from './config';
-/** This will be displayed as an interface */
 @Module({
     imports: [
         ConfigModule.forRoot({
@@ -11,10 +11,9 @@ import configs from './config';
             isGlobal: true,
             envFilePath: './.env',
         }),
+        LoggerModule.forRoot(),
     ],
     controllers: [AppController],
     providers: [AppService],
 })
-export class AppModule {
-    constructor(private readonly configService: ConfigService) {}
-}
+export class AppModule {}

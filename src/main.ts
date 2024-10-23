@@ -2,12 +2,15 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { INestApplication } from '@nestjs/common';
-
+import { Logger } from 'nestjs-pino';
 const IS_DEV = process.env.NODE_ENV !== 'production';
 const IS_PROD = !IS_DEV;
 async function bootstrap() {
-    const app = await NestFactory.create(AppModule);
+    const app = await NestFactory.create(AppModule, { bufferLogs: true });
+
+    installLogger(app);
     installSwaggerInDevMode(app);
+
     const port = process.env.PORT ?? 3000;
 
     await app.listen(port, () => {
@@ -16,6 +19,10 @@ async function bootstrap() {
             console.log(`Swagger is running on http://localhost:${port}/api`);
         }
     });
+}
+
+function installLogger(app: INestApplication) {
+    app.useLogger(app.get(Logger));
 }
 
 function installSwaggerInDevMode(app: INestApplication) {
