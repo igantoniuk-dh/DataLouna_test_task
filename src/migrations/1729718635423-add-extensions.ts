@@ -1,5 +1,4 @@
-import { identity } from 'rxjs';
-import { MigrationInterface, QueryRunner, Table, TableIndex } from 'typeorm';
+import { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class Migrations1729718635423 implements MigrationInterface {
     public async up(queryRunner: QueryRunner): Promise<void> {
