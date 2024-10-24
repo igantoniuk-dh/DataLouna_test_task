@@ -51,11 +51,10 @@ export class ItemManager {
     async get(opts: { page: number; pageSize: number }): Promise<ShopApiResponse<Item>> {
         try {
             const { page, pageSize } = opts;
-            const totalCount = await this.totalCountOfItems();
-            if (!totalCount) {
-                throw new ItemsNotFetchException();
-            }
 
+            const totalCount = await this.totalCountOfItems();
+
+            if (!totalCount) throw new ItemsNotFetchException();
             const itemsFromStore = await this.getItemsFromPg(opts);
 
             return {
@@ -75,9 +74,7 @@ export class ItemManager {
                 },
             };
         } catch (e) {
-            if (e instanceof ItemsNotFetchException) {
-                return this.getItemsFromApiAndStoreToDb(opts);
-            }
+            if (e instanceof ItemsNotFetchException) return this.getItemsFromApiAndStoreToDb(opts);
             throw e;
         }
     }
