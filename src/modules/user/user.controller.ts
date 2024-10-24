@@ -38,29 +38,35 @@ export class UserController {
             });
             return res.status(apiResonse.code).json(apiResonse);
         } catch (error) {
-            const code = error instanceof UserNotFoundException ? 404 : 500;
-            const apiResonse: ShopApiResponse = {
-                message: 'login error',
-                ok: false,
-                code,
-                data: [],
-            };
-
-            this.logger.error(
-                {
-                    stack: error.stack,
-                },
-                'login error'
-            );
+            const apiResonse: ShopApiResponse = this.createLoginError(error);
             return res.status(apiResonse.code).json(apiResonse);
         }
+    }
+
+    private createLoginError(error) {
+        const code = error instanceof UserNotFoundException ? 404 : 500;
+        const apiResonse: ShopApiResponse = {
+            message: 'login error',
+            ok: false,
+            code,
+            data: [],
+        };
+
+        this.logger.error(
+            {
+                stack: error.stack,
+            },
+            'login error'
+        );
+
+        return apiResonse;
     }
 
     @UseGuards(AuthGuard)
     @Post('/changePassoword')
     async changePassoword(@Body() changePasswordDto: ChangePasswordDto, @Res() res: Response, @Req() req: Request) {
         try {
-            const user = await this.service.changePassword(changePasswordDto, (req as any).user);
+            const user = await this.service.changePassword(changePasswordDto, req['user']);
             const apiResonse: ShopApiResponse = {
                 message: 'change password success',
                 ok: true,
@@ -78,20 +84,25 @@ export class UserController {
             return res.status(apiResonse.code).json(apiResonse);
         } catch (error) {
             const code = error instanceof UserNotFoundException ? 404 : 500;
-            const apiResonse: ShopApiResponse = {
-                message: 'change password error',
-                ok: false,
-                code,
-                data: [],
-            };
+            const apiResonse: ShopApiResponse = this.createChangePasswordError(error);
 
-            this.logger.error(
-                {
-                    stack: error.stack,
-                },
-                'change password error'
-            );
             return res.status(apiResonse.code).json(apiResonse);
         }
+    }
+
+    private createChangePasswordError(error: any) {
+        this.logger.error(
+            {
+                stack: error.stack,
+            },
+            'change password error'
+        );
+        const code = error instanceof UserNotFoundException ? 404 : 500;
+        return {
+            message: 'change password error',
+            ok: false,
+            data: [],
+            code,
+        };
     }
 }
