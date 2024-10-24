@@ -7,7 +7,7 @@ import { UserNotFoundException } from './expections/UserNotFoundExecption';
 export class UserManager {
     constructor(private readonly datasource: DataSource) {}
 
-    async getByIdAndUpdatedAt(id: string, updatedAt: string) {
+    async getByIdAndUpdatedAt(id: string) {
         const runner = this.datasource.createQueryRunner();
         const qRyAndParams = this.datasource
             .createQueryBuilder(runner)

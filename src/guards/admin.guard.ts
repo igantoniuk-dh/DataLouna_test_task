@@ -25,7 +25,7 @@ export class AuthGuard implements CanActivate {
             const parsedPayload = typeof payload === 'string' ? JSON.parse(payload) : payload;
 
             console.log({ parsedPayload, payload });
-            await new UserManager(this.datasource).getByIdAndUpdatedAt(parsedPayload.id, parsedPayload.updatedAt);
+            await new UserManager(this.datasource).getByIdAndUpdatedAt(parsedPayload.id);
 
             request['user'] = parsedPayload;
         } catch (e) {

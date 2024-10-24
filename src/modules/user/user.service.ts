@@ -1,10 +1,9 @@
 import { Injectable } from '@nestjs/common';
+import { User } from 'src/interfaces/User';
+import { DataSource } from 'typeorm';
+import { ChangePasswordDto } from './dto/changePassword.dto';
 import { LoginDto } from './dto/login.dto';
 import { UserManager } from './user.entity';
-import { DataSource } from 'typeorm';
-import { UserNotFoundException } from './expections/UserNotFoundExecption';
-import { ChangePasswordDto } from './dto/changePassword.dto';
-import { User } from 'src/interfaces/User';
 
 @Injectable()
 export class UserService {
