@@ -83,14 +83,13 @@ export class UserController {
 
             return res.status(apiResonse.code).json(apiResonse);
         } catch (error) {
-            const code = error instanceof UserNotFoundException ? 404 : 500;
             const apiResonse: ShopApiResponse = this.createChangePasswordError(error);
 
             return res.status(apiResonse.code).json(apiResonse);
         }
     }
 
-    private createChangePasswordError(error: any) {
+    private createChangePasswordError(error) {
         this.logger.error(
             {
                 stack: error.stack,
