@@ -51,9 +51,7 @@ export class ItemManager {
     async get(opts: { page: number; pageSize: number }): Promise<ShopApiResponse<Item>> {
         try {
             const { page, pageSize } = opts;
-
             const totalCount = await this.totalCountOfItems();
-
             if (!totalCount) {
                 throw new ItemsNotFetchException();
             }
