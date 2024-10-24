@@ -1,10 +1,9 @@
-import { Controller, Get, Query, Res, UseGuards, UseInterceptors } from '@nestjs/common';
+import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
+import { Controller, Get, Query, UseGuards, UseInterceptors } from '@nestjs/common';
 import { ApiQuery, ApiTags } from '@nestjs/swagger';
+import { PinoLogger } from 'nestjs-pino';
 import { AuthGuard } from 'src/guards/admin.guard';
 import { ItemService } from './item.service';
-import { Response } from 'express';
-import { PinoLogger } from 'nestjs-pino';
-import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
 
 @ApiTags('Item')
 @Controller('item')

@@ -1,5 +1,3 @@
-import { unknown } from 'zod';
-
 export interface ShopApiResponse<T = unknown> {
     message: string;
     ok: boolean;

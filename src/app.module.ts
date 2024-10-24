@@ -1,16 +1,16 @@
+import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import { JwtModule } from '@nestjs/jwt';
+import { ScheduleModule } from '@nestjs/schedule';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { redisStore } from 'cache-manager-redis-yet';
 import { LoggerModule } from 'nestjs-pino';
 import configs from './config';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserModule } from './modules/user/user.module';
 import { ItemModule } from './modules/item/item.module';
 import { PurchaseModule } from './modules/purchase/purchase.module';
-import { JwtModule } from '@nestjs/jwt';
-import { CacheInterceptor, CacheModule, CacheStore } from '@nestjs/cache-manager';
-import { ScheduleModule } from '@nestjs/schedule';
-import { redisStore } from 'cache-manager-redis-yet';
-import { APP_INTERCEPTOR } from '@nestjs/core';
+import { UserModule } from './modules/user/user.module';
 
 @Module({
     imports: [
