@@ -8,6 +8,7 @@ Purchase o-- Item
         +changePassword()
         +consumeBalance()
         +getAccountBalance()
+        +isAuth()
 
         -id: number
         -createdAt: Date

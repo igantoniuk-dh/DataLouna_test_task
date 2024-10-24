@@ -1,6 +1,7 @@
 import { registerAs } from '@nestjs/config';
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { z } from 'zod';
+import * as path from 'path';
 
 const config = {
     ssl: process.env.TLS_CA_PATH,
@@ -10,8 +11,12 @@ const config = {
     password: process.env.PG_PASSWORD,
     database: process.env.PG_DATABASE,
     type: 'postgres',
-    migrations: ['src/migrations/*.ts'],
+    migrations: [getMigrationsPath()],
 };
+
+function getMigrationsPath() {
+    return path.resolve(__dirname, '..', 'migrations/*.ts');
+}
 
 export const typeormConfig = registerAs('typeorm', () => {
     try {

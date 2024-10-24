@@ -6,8 +6,9 @@ import { typeormConfig, connectionSource as TypeormDataSourceForMigrations } fro
 import { redisConfig } from './redis.config';
 
 import { adminConfig } from './admin.config';
+import { jwtConfig } from './jwt.config';
 
-const configs = [redisConfig, typeormConfig, adminConfig];
+const configs = [redisConfig, typeormConfig, adminConfig, jwtConfig];
 
 export default configs;
 
