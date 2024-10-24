@@ -10,6 +10,7 @@ import { ItemsNotFetchException } from './exceptions/ItemsNotFetchExpection';
 import { ItemsUnexpectingResponse } from './exceptions/ItemsUnexpectingResponse';
 
 const skinItemSchema = z.object({
+    id: z.string().optional(),
     market_hash_name: z.string(),
     currency: z.string(),
     suggested_price: z.number(),
@@ -60,7 +61,12 @@ export class ItemManager {
             const itemsFromStore = await this.getItemsFromPg(opts);
 
             return {
-                data: [...itemsFromStore],
+                data: itemsFromStore.map(item =>
+                    this.mapItemToApi({
+                        ...item,
+                        id: item.id as string,
+                    })
+                ),
                 ok: true,
                 message: 'success fetch item',
                 code: 200,
@@ -109,6 +115,23 @@ export class ItemManager {
 
         return this.datasource.manager.query(qRyAndParams[0], qRyAndParams[1]);
     }
+
+    mapItemToApi(item: SkinItem) {
+        const [tradablePrice, notTradablePrice] = [
+            +item.min_price,
+            +item.max_price,
+            +item.suggested_price,
+            +item.mean_price,
+            +item.median_price,
+        ].sort();
+
+        return {
+            name: item.market_hash_name,
+            id: item.id,
+            tradablePrice,
+            notTradablePrice,
+        };
+    }
     async getItemsFromApiAndStoreToDb(opts?: { page: number; pageSize: number }): Promise<ShopApiResponse<Item>> {
         const apiData = await this.getItemsFromApi();
 
@@ -121,7 +144,7 @@ export class ItemManager {
     }
 
     private async getItemsFromApi() {
-        const obs = this.httpService.get('https://api.skinport.com/v1/items?tradable=true');
+        const obs = this.httpService.get('https://api.skinport.com/v1/items');
         const items = await lastValueFrom(obs).then(res => res.data);
 
         if (!(items instanceof Array)) {

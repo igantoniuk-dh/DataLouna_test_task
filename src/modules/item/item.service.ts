@@ -25,4 +25,8 @@ export class ItemService {
         await this.cacheManager.reset();
         await new ItemManager(this.datasource, this.httpService, this.logger).getItemsFromApiAndStoreToDb();
     }
+
+    async resetCache() {
+        await this.cacheManager.reset();
+    }
 }

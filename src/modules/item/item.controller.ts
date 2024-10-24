@@ -1,5 +1,5 @@
 import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
-import { Controller, Get, Query, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Controller, Get, Post, Query, UseGuards, UseInterceptors } from '@nestjs/common';
 import { ApiQuery, ApiTags } from '@nestjs/swagger';
 import { PinoLogger } from 'nestjs-pino';
 import { AuthGuard } from 'src/guards/admin.guard';
@@ -40,5 +40,16 @@ export class ItemController {
 
             return response;
         }
+    }
+    @Post('/reset-cache')
+    async resetCache() {
+        await this.itemService.resetCache();
+
+        return {
+            code: 200,
+            message: 'reset cache success',
+            data: [],
+            ok: true,
+        };
     }
 }

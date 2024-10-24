@@ -1,14 +1,6 @@
 export interface Item {
-    id: number;
+    id: string;
     name: string;
-    createdAt: Date;
-    updatedAt: Date;
-    currency: string;
-    suggestedPrice: number;
-    itemPage: string;
-    marketPage: string;
-    minPrice: number;
-    maxPrice: number;
-    meanPrice: number;
-    quantity: number;
+    tradablePrice: number;
+    notTradablePrice: number;
 }
