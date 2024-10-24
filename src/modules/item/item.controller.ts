@@ -1,13 +1,16 @@
-import { Controller, Get, Query, Res, UseGuards } from '@nestjs/common';
+import { Controller, Get, Query, Res, UseGuards, UseInterceptors } from '@nestjs/common';
 import { ApiQuery, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/guards/admin.guard';
 import { ItemService } from './item.service';
 import { Response } from 'express';
 import { PinoLogger } from 'nestjs-pino';
+import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
 
 @ApiTags('Item')
 @Controller('item')
 @UseGuards(AuthGuard)
+@UseInterceptors(CacheInterceptor)
+@CacheTTL(1000 * 60 * 60 * 4)
 export class ItemController {
     constructor(
         private readonly itemService: ItemService,
@@ -16,14 +19,14 @@ export class ItemController {
     @Get('/list')
     @ApiQuery({ name: 'page', type: Number })
     @ApiQuery({ name: 'pageSize', type: Number })
-    async list(@Query('page') page: string, @Query('pageSize') pageSize: string, @Res() res: Response) {
+    async list(@Query('page') page: string, @Query('pageSize') pageSize: string) {
         try {
             const response = await this.itemService.getIgems({
                 page: Math.abs(+page) || 1,
                 pageSize: Math.abs(+pageSize) || 10,
             });
 
-            return res.status(response.code).json(response);
+            return response;
         } catch (e) {
             const response = {
                 code: 500,
@@ -36,7 +39,7 @@ export class ItemController {
                 stack: e.stack,
             });
 
-            return res.status(response.code).json(response);
+            return response;
         }
     }
 }

@@ -8,6 +8,7 @@ import { CACHE_MANAGER, Cache } from '@nestjs/cache-manager';
 
 @Injectable()
 export class ItemService {
+    private cacheKey = 'cache-items';
     constructor(
         private readonly datasource: DataSource,
         private readonly httpService: HttpService,
@@ -15,17 +16,13 @@ export class ItemService {
         @Inject(CACHE_MANAGER) private cacheManager: Cache
     ) {}
     async getIgems(opts: { page: number; pageSize: number }) {
-        return new ItemManager(this.datasource, this.httpService, this.logger, this.cacheManager).get(opts);
+        const data = await new ItemManager(this.datasource, this.httpService, this.logger).get(opts);
+        return data;
     }
 
     @Cron('0 */2 * * *')
     async updateItemsEvery2Hours() {
         await this.cacheManager.reset();
-        await new ItemManager(
-            this.datasource,
-            this.httpService,
-            this.logger,
-            this.cacheManager
-        ).getItemsFromApiAndStoreToDb();
+        await new ItemManager(this.datasource, this.httpService, this.logger).getItemsFromApiAndStoreToDb();
     }
 }

@@ -7,9 +7,10 @@ import { UserModule } from './modules/user/user.module';
 import { ItemModule } from './modules/item/item.module';
 import { PurchaseModule } from './modules/purchase/purchase.module';
 import { JwtModule } from '@nestjs/jwt';
-import { CacheModule, CacheStore } from '@nestjs/cache-manager';
+import { CacheInterceptor, CacheModule, CacheStore } from '@nestjs/cache-manager';
 import { ScheduleModule } from '@nestjs/schedule';
 import { redisStore } from 'cache-manager-redis-yet';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 
 @Module({
     imports: [
@@ -51,6 +52,11 @@ import { redisStore } from 'cache-manager-redis-yet';
         PurchaseModule,
     ],
     controllers: [],
-    providers: [],
+    providers: [
+        {
+            provide: APP_INTERCEPTOR,
+            useClass: CacheInterceptor,
+        },
+    ],
 })
 export class AppModule {}

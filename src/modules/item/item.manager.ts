@@ -42,15 +42,11 @@ const updateCols = [
 ];
 const idCols = ['market_hash_name'];
 
-const cacheKey = 'skin-items-cache';
-const countCacheKey = 'skin-items-count-cache';
-const cacheTTL = 1000 * 60 * 60 * 4;
 export class ItemManager {
     constructor(
         private datasource: DataSource,
         private httpService: HttpService,
-        private logger: PinoLogger,
-        private cacheManager: Cache
+        private logger: PinoLogger
     ) {}
     async get(opts: { page: number; pageSize: number }): Promise<ShopApiResponse<Item>> {
         try {
@@ -62,7 +58,7 @@ export class ItemManager {
                 throw new ItemsNotFetchException();
             }
 
-            const itemsFromStore = await this.getItemsFromStore(opts);
+            const itemsFromStore = await this.getItemsFromPg(opts);
 
             return {
                 data: [...itemsFromStore],
@@ -83,9 +79,6 @@ export class ItemManager {
         }
     }
     private async totalCountOfItems(): Promise<number> {
-        const countFromCache = await this.cacheManager.get(countCacheKey).then(k => +k || 0);
-        if (countFromCache) return countFromCache;
-
         const runner = this.datasource.createQueryRunner();
         const qRyAndParams = this.datasource
             .createQueryBuilder(runner)
@@ -97,35 +90,20 @@ export class ItemManager {
         const count = await this.datasource.manager.query(qRyAndParams[0], qRyAndParams[1]);
         const countFromPg = +count[0].count;
 
-        await this.cacheManager.set(countCacheKey, countFromPg, cacheTTL);
         return countFromPg;
     }
 
-    async getItemsFromStore(opts: { page: number; pageSize: number }): Promise<Item[]> {
-        const itemsFromCache = await this.getItemsFromCache(opts);
-        if (!itemsFromCache.length) {
-            const items = await this.getItemsFromPg();
-            await this.cacheManager.set(cacheKey, JSON.stringify(items), cacheTTL);
-        }
-
-        return this.getItemsFromCache(opts);
-    }
-
-    async getItemsFromCache(opts: { page: number; pageSize: number }) {
-        const fromCache = await this.cacheManager.get(cacheKey);
-        if (!fromCache) return [];
-        const items = JSON.parse(fromCache as string);
-
-        return items.slice(opts.page * opts.pageSize, opts.page * opts.pageSize + opts.pageSize);
-    }
-
-    async getItemsFromPg(): Promise<Item[]> {
+    async getItemsFromPg(opts?: { page: number; pageSize: number }): Promise<Item[]> {
         const runner = this.datasource.createQueryRunner();
 
+        const offset = (opts?.page - 1) * opts?.pageSize;
+        const limit = opts?.pageSize;
         const qRyAndParams = this.datasource
             .createQueryBuilder(runner)
             .select('*')
             .from('items', 'it')
+            .offset(offset)
+            .limit(limit)
             .orderBy('it.market_hash_name', 'ASC')
 
             .getQueryAndParameters();
