@@ -4,12 +4,12 @@ import { AuthGuard } from 'src/guards/admin.guard';
 import { LoginDto } from './dto/login.dto';
 import { UserService } from './user.service';
 import { Response } from 'express';
-import { ShopApiResponse } from 'src/interfaces/ShopApiResopnse';
+import { ShopApiResponse } from 'src/interfaces/ShopApiResponse';
 import { PinoLogger } from 'nestjs-pino';
-import { UserNotFoundException } from './expections/UserNotFoundExecption';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { ChangePasswordDto } from './dto/changePassword.dto';
+import { UserNotFoundException } from './exceptions/UserNotFoundExecption';
 
 @Controller('user')
 @ApiTags('user')

@@ -3,7 +3,7 @@ import { User } from 'src/interfaces/User';
 import { DataSource } from 'typeorm';
 import { ChangePasswordDto } from './dto/changePassword.dto';
 import { LoginDto } from './dto/login.dto';
-import { UserManager } from './user.entity';
+import { UserManager } from './user.manager';
 
 @Injectable()
 export class UserService {

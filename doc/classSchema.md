@@ -4,11 +4,10 @@ Purchase o-- User
 Purchase o-- Item
     class User{
         
-        +login()
-        +changePassword()
+        +login(login: string, password: string)
+        +changePassword(password: string, newPassword: string)
         +consumeBalance()
         +getAccountBalance()
-        +isAuth()
 
         -id: number
         -createdAt: Date
@@ -32,7 +31,7 @@ Purchase o-- Item
         -quantity: number
 
         +create()
-        +get()
+        +get(page,pageSize)
     }
     class Purchase{
         -user: User

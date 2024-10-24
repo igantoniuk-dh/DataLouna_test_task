@@ -7,6 +7,9 @@ import { UserModule } from './modules/user/user.module';
 import { ItemModule } from './modules/item/item.module';
 import { PurchaseModule } from './modules/purchase/purchase.module';
 import { JwtModule } from '@nestjs/jwt';
+import { CacheModule, CacheStore } from '@nestjs/cache-manager';
+import { ScheduleModule } from '@nestjs/schedule';
+import { redisStore } from 'cache-manager-redis-yet';
 
 @Module({
     imports: [
@@ -27,6 +30,22 @@ import { JwtModule } from '@nestjs/jwt';
                 return configService.get('jwt');
             },
         }),
+        CacheModule.registerAsync({
+            inject: [ConfigService],
+
+            isGlobal: true,
+            useFactory: async (configService: ConfigService) => {
+                return {
+                    store: await redisStore({
+                        socket: {
+                            ...configService.get('redis'),
+                        },
+                    }),
+                };
+            },
+        }),
+
+        ScheduleModule.forRoot(),
         UserModule,
         ItemModule,
         PurchaseModule,

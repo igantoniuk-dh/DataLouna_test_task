@@ -2,7 +2,7 @@ import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
-import { UserManager } from 'src/modules/user/user.entity';
+import { UserManager } from 'src/modules/user/user.manager';
 import { DataSource } from 'typeorm';
 
 @Injectable()
@@ -24,7 +24,6 @@ export class AuthGuard implements CanActivate {
             const payload = this.jwtService.verify(token, this.config.get('jwt'));
             const parsedPayload = typeof payload === 'string' ? JSON.parse(payload) : payload;
 
-            console.log({ parsedPayload, payload });
             await new UserManager(this.datasource).getByIdAndUpdatedAt(parsedPayload.id);
 
             request['user'] = parsedPayload;

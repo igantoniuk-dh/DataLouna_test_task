@@ -3,7 +3,7 @@ import { User } from 'src/interfaces/User';
 import { DataSource } from 'typeorm';
 import { ChangePasswordDto } from './dto/changePassword.dto';
 import { LoginDto } from './dto/login.dto';
-import { UserNotFoundException } from './expections/UserNotFoundExecption';
+import { UserNotFoundException } from './exceptions/UserNotFoundExecption';
 export class UserManager {
     constructor(private readonly datasource: DataSource) {}
 
